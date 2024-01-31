@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CA3" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:statusBarColor">@android:color/holo_purple</item>
+    </style>
+
+    <style name="Theme.CA3" parent="Base.Theme.CA3" />
+
+    <style name="ThemeOverlay.AppCompat.navTheme">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
+</resources>
