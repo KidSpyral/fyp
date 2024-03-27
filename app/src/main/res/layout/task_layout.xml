@@ -34,14 +34,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Date" />
 
-        <TextView
+        <ImageView
             android:id="@+id/Mood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerHorizontal="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Mood" />
+            android:src="@drawable/angry"
+            android:scaleType="fitCenter"/>
 
         <TextView
             android:id="@+id/Description"

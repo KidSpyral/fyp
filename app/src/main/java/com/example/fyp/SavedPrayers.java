@@ -270,6 +270,10 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(getApplicationContext(), Sawm.class);
             startActivity(intent);
             finish();        }
+        if (itemId == R.id.settings){
+            Intent intent = new Intent(getApplicationContext(), AppSettings.class);
+            startActivity(intent);
+            finish();        }
         else if (itemId == R.id.profile) {
             Intent intent = new Intent(getApplicationContext(), Profile.class);
             startActivity(intent);

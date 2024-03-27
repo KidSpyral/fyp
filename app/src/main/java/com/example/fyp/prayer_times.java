@@ -29,6 +29,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -97,6 +98,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
     private TextView nextPrayerNameTextView, nextPrayerTimeTextView, nextPrayerEndTimeTextView;
 
     private Handler handler;
+    private TextView prayertrackericon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +164,18 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
         // Start the continuous scrolling animation
         startContinuousScrolling();
 
+        prayertrackericon = findViewById(R.id.prayertrackericon);
+        prayertrackericon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), PrayerTracker.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -203,7 +217,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
         dateTextView = findViewById(R.id.dateTextView);
         nextPrayerNameTextView = findViewById(R.id.prayername);
         nextPrayerTimeTextView = findViewById(R.id.prayertime);
-        nextPrayerEndTimeTextView = findViewById(R.id.prayerendtime);
+
 
         handler = new Handler();
 
@@ -690,7 +704,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
 
             nextPrayerNameTextView.setText(nextPrayerName); // Update prayer name
             nextPrayerTimeTextView.setText(formatter.format(nextPrayerTime)); // Update prayer time
-            nextPrayerEndTimeTextView.setText(formatter.format(prayerEndTime)); // Update end time
+
 
             // Broadcast an intent to trigger the notification
             Intent notificationIntent = new Intent("com.apptic.namaztimings.PRAYER_TIME_NOTIFICATION");
@@ -859,6 +873,10 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
             finish();        }
         if (itemId == R.id.sawm){
             Intent intent = new Intent(getApplicationContext(), Sawm.class);
+            startActivity(intent);
+            finish();        }
+        if (itemId == R.id.settings){
+            Intent intent = new Intent(getApplicationContext(), AppSettings.class);
             startActivity(intent);
             finish();        }
         else if (itemId == R.id.profile) {

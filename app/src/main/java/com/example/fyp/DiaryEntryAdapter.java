@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ public class DiaryEntryAdapter extends RecyclerView.Adapter<DiaryEntryAdapter.Ta
 
         TextView Title;
         TextView Date;
-        TextView Mood;
+        ImageView Mood;
         TextView Description;
 
         // ViewHolder components (e.g., TextViews for tag, description, etc.)
@@ -142,8 +143,36 @@ public class DiaryEntryAdapter extends RecyclerView.Adapter<DiaryEntryAdapter.Ta
         if (currentUser != null && diaryEntry != null) {
             holder.Title.setText(diaryEntry.getTitle());
             holder.Date.setText(diaryEntry.getEntryDate());
-            holder.Mood.setText(diaryEntry.getSentiment());
             holder.Description.setText(diaryEntry.getDescription());
+
+            String sentiment = diaryEntry.getSentiment();
+            int moodResource;
+
+            switch (sentiment) {
+                case "fear":
+                    moodResource = R.drawable.fear;
+                    break;
+                case "sadness":
+                    moodResource = R.drawable.sadness;
+                    break;
+                case "anger":
+                    moodResource = R.drawable.angry;
+                    break;
+                case "joy":
+                    moodResource = R.drawable.joy;
+                    break;
+                case "love":
+                    moodResource = R.drawable.love;
+                    break;
+                case "surprise":
+                    moodResource = R.drawable.surprise;
+                    break;
+                default:
+                    // Throw an exception if sentiment doesn't match any known mood
+                    throw new IllegalArgumentException("Unknown sentiment: " + sentiment);
+            }
+
+            holder.Mood.setImageResource(moodResource);
         }
     }
 
