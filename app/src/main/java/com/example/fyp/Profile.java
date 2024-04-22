@@ -27,7 +27,7 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
 
     DrawerLayout drawerLayout;
     Toolbar toolbar;
-    TextView numbertextview;
+    TextView numbertextview,emailTextDisplay,passwordTextDisplay;
     TextView nametextview;
     FirebaseAuth mAuth;
     String User;
@@ -41,7 +41,9 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
 
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser().getUid();
+        emailTextDisplay = findViewById(R.id.emailTextDisplay);
         numbertextview = findViewById(R.id.numberTextDisplay);
+        passwordTextDisplay = findViewById(R.id.passwordTextDisplay);
         nametextview = findViewById(R.id.nameTextDisplay);
 
         toolbar = findViewById(R.id.toolbar);
@@ -70,10 +72,14 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
                     ReadWriteUserDetails userprofile  = snapshot.getValue(ReadWriteUserDetails.class);
                     if (userprofile != null){
                         String name = userprofile.name;
+                        String email = userprofile.email;
+                        String password = userprofile.password;
                         String number = userprofile.phone;
 
                         nametextview.setText(name);
                         numbertextview.setText(number);
+                        emailTextDisplay.setText(email);
+                        passwordTextDisplay.setText(password);
 
                     }
                 }

@@ -52,6 +52,7 @@ public class Qibla extends AppCompatActivity implements NavigationView.OnNavigat
     SharedPreferences prefs;
     GPSTracker gps;
     Geocoder geocoder;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +82,39 @@ public class Qibla extends AppCompatActivity implements NavigationView.OnNavigat
         textDegree = (TextView) findViewById(R.id.textDegree);
 
         setupCompass();
-        fetchGPS();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission has not been granted, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            // Permission is already granted, proceed with your operations
+            // Call your method to access the location here
+            fetchGPS();
+        }
+
 
         String qiblaDeg = Math.round(GetFloat("qibla_degree")) + "°";
 
         textCity.setText(city);
         textDegree.setText(qiblaDeg);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            // Check if the permission request is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted, proceed with your operations
+                // Call your method to access the location here
+            } else {
+                fetchGPS();
+                // Permission is denied, handle accordingly
+                // You may inform the user or disable location-related functionality
+            }
+        }
     }
 
     @Override
@@ -206,21 +234,21 @@ public class Qibla extends AppCompatActivity implements NavigationView.OnNavigat
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                SaveBoolean("permission_granted", true);
-                setupCompass();
-            } else {
-                Toast.makeText(getApplicationContext(), "Permission denied!", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            return;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode == 1) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                SaveBoolean("permission_granted", true);
+//                setupCompass();
+//            } else {
+//                Toast.makeText(getApplicationContext(), "Permission denied!", Toast.LENGTH_LONG).show();
+//                finish();
+//            }
+//            return;
+//        }
+//
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     public void fetchGPS() {
         double result;

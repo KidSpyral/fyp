@@ -1,5 +1,8 @@
 package com.example.fyp;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,22 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
+import com.example.fyp.common.AppUtils;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,14 +37,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.example.fyp.diaryEntry;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 public class SavedPrayers extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -49,11 +51,63 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     FirebaseAuth mAuth;
     String User;
-    private DatabaseReference diaryEntriesReference;
+    DatabaseReference referenceProfile;
     private PrayerAdapter PrayerAdapter;
     private List<Prayer> PrayerList;
+
     private RecyclerView recyclerView2;
-    private BarChart barChart;
+    private PieChart pieChart;
+    private Spinner spinner;
+    List<diaryEntry> diaryEntries;
+    List<diaryEntry> diarySortedEntries;
+
+
+    private void reDrawPieChart(String dataType){
+
+        diarySortedEntries = new ArrayList<>();
+        Date currentDate = AppUtils.getCurrentDate();
+
+        if(dataType.equals("All")){
+            diarySortedEntries.addAll(diaryEntries);
+            calculateEmotionFrequencies(diarySortedEntries);
+        }else if (dataType.equals("Last 7 days")){
+
+            for (int jack = 0; jack < diaryEntries.size(); jack++) {
+
+                if (AppUtils.isDifference7Days(currentDate, AppUtils.parseFetchedDate(diaryEntries.get(jack).getEntryDate()))) {
+                    //dateArray[jack] = FireStoreDB.graphMoodsList.get(jack).getPainNoteDate();
+                    diarySortedEntries.add(diaryEntries.get(jack));
+                }
+            }
+
+            calculateEmotionFrequencies(diarySortedEntries);
+
+
+        }else if (dataType.equals("Last 30 days")){
+            for (int jack = 0; jack < diaryEntries.size(); jack++) {
+
+                if (AppUtils.isDifference30Days(currentDate, AppUtils.parseFetchedDate(diaryEntries.get(jack).getEntryDate()))) {
+                    //dateArray[jack] = FireStoreDB.graphMoodsList.get(jack).getPainNoteDate();
+                    diarySortedEntries.add(diaryEntries.get(jack));
+                }
+            }
+
+            calculateEmotionFrequencies(diarySortedEntries);
+
+        }else if (dataType.equals("Last 90 days")){
+            for (int jack = 0; jack < diaryEntries.size(); jack++) {
+
+                if (AppUtils.isDifference90Days(currentDate, AppUtils.parseFetchedDate(diaryEntries.get(jack).getEntryDate()))) {
+                    //dateArray[jack] = FireStoreDB.graphMoodsList.get(jack).getPainNoteDate();
+                    diarySortedEntries.add(diaryEntries.get(jack));
+                }
+            }
+
+            calculateEmotionFrequencies(diarySortedEntries);
+        }
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +116,24 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser().getUid();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            diaryEntriesReference = FirebaseDatabase.getInstance().getReference("Diary Entries").child(uid);
+        diaryEntries = new ArrayList<>();
 
-            retrieveEmotionsAndPopulateChart();
-        } else {
-            // Handle the case where the user is not logged in
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        pieChart = findViewById(R.id.pieChart);
+        spinner = findViewById(R.id.dataList);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                reDrawPieChart(parent.getItemAtPosition(position).toString());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,72 +151,112 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
         recyclerView2.setHasFixedSize(true);
 
+        retrieveDiaryEntries();
+
         PrayerList = new ArrayList<>();
         PrayerAdapter = new PrayerAdapter(PrayerList, this);
         recyclerView2.setAdapter(PrayerAdapter);
         fetchPrayers();
     }
 
-    private void retrieveEmotionsAndPopulateChart() {
-
-        diaryEntriesReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<BarEntry> entries = new ArrayList<>();
-                List<String> daysOfWeek = getDaysOfWeek();
-
-                for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
-                    diaryEntry entry = entrySnapshot.getValue(diaryEntry.class);
-
-                    if (entry != null) {
-                        // Assuming 'entrydate' is the field in your diaryEntry model
-                        // and it contains the date in "dd/MM/yyyy" format
-                        String entryDate = entry.getEntryDate();
-
-                        // Parse the date string into a Date object
-                        Date date = parseDate(entryDate);
-
-                        // Get the day of the week from the parsed date
-                        int dayOfWeek = getDayOfWeek(date);
-
-                        // Assuming 'sentiment' is the field in your diaryEntry model
-                        String sentiment = entry.getSentiment();
-
-                        entries.add(new BarEntry(dayOfWeek, getEmotionIndex(sentiment)));
+    private void retrieveDiaryEntries() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            DatabaseReference diaryRef = FirebaseDatabase.getInstance().getReference("Diary Entries").child(User);
+            diaryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    diaryEntries = new ArrayList<>();
+                    for (DataSnapshot entrySnapshot : snapshot.getChildren()) {
+                        diaryEntry diaryEntry = entrySnapshot.getValue(diaryEntry.class);
+                        if (diaryEntry != null) {
+                            diaryEntries.add(diaryEntry);
+                        }
                     }
+                    calculateEmotionFrequencies(diaryEntries);
                 }
 
-                BarDataSet dataSet = new BarDataSet(entries, "Emotion Values, 1. anger, 2. fear, 3. joy, 4. love, 5. sadness, 6. surprise.");
-                BarData barData = new BarData(dataSet);
-                dataSet.setColor(getResources().getColor(R.color.accent_color));
-
-                BarChart barChart = findViewById(R.id.MoodChartData);
-                barChart.setData(barData);
-
-                // Customize chart appearance
-                barChart.getDescription().setEnabled(false);
-                barChart.setDrawGridBackground(false);
-
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setGranularity(1f);
-                xAxis.setValueFormatter(new IndexAxisValueFormatter(daysOfWeek));
-
-                YAxis leftAxis = barChart.getAxisLeft();
-                leftAxis.setAxisMinimum(0f);
-
-                YAxis rightAxis = barChart.getAxisRight();
-                rightAxis.setEnabled(false);
-
-                barChart.invalidate(); // Refresh the chart
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle onCancelled
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(SavedPrayers.this, "Failed to retrieve diary entries: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
+    private void calculateEmotionFrequencies(List<diaryEntry> diaryEntries) {
+        // Define list of emotions
+        String[] emotions = {"anger", "fear", "joy", "love", "sadness", "surprise"};
+
+        // Initialize emotion frequency map
+        HashMap<String, Integer> emotionFrequencies = new HashMap<>();
+        for (String emotion : emotions) {
+            emotionFrequencies.put(emotion, 0);
+        }
+
+        // Iterate through diary entries and update emotion frequencies
+        for (diaryEntry entry : diaryEntries) {
+            String emotion = entry.getSentiment();
+            if (emotionFrequencies.containsKey(emotion)) {
+                emotionFrequencies.put(emotion, emotionFrequencies.get(emotion) + 1);
+            }
+        }
+
+        // Generate pie chart with emotion frequencies
+        generatePieChart(emotionFrequencies);
+    }
+
+    private void generatePieChart(HashMap<String, Integer> emotionFrequencies) {
+        // Prepare data for the pie chart
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        // Customize colors based on emotion
+        for (Map.Entry<String, Integer> entry : emotionFrequencies.entrySet()) {
+            String emotion = entry.getKey();
+            int frequency = entry.getValue();
+
+            if (frequency > 0) {
+                entries.add(new PieEntry(frequency, emotion));
+
+                switch (emotion) {
+                    case "anger":
+                        colors.add(Color.RED);
+                        break;
+                    case "fear":
+                        colors.add(Color.BLUE);
+                        break;
+                    case "joy":
+                        colors.add(Color.GREEN);
+                        break;
+                    case "love":
+                        colors.add(Color.MAGENTA);
+                        break;
+                    case "sadness":
+                        colors.add(Color.GRAY);
+                        break;
+                    case "surprise":
+                        colors.add(Color.YELLOW);
+                        break;
+                }
+            }
+        }
+
+        // Create dataset and configure the pie chart
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(colors);
+        dataSet.setValueTextSize(10f); // Set text size for the pie chart values
+
+        PieData data = new PieData(dataSet);
+
+        // Configure pie chart
+        pieChart.setData(data);
+        pieChart.setEntryLabelTextSize(0); // Set text size for the pie chart labels
+        pieChart.setDescription(null); // Disable description
+        pieChart.setDrawEntryLabels(true);
+        pieChart.setUsePercentValues(true);
+        pieChart.invalidate(); // Refresh chart
+    }
 
     private void fetchPrayers() {
         DatabaseReference DEReference = FirebaseDatabase.getInstance().getReference("Prayers").child(User);
@@ -178,57 +278,6 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(SavedPrayers.this, "Error fetching diary entries", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private Date parseDate(String dateString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            return sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new Date(); // Return a default date or handle the error accordingly
-        }
-    }
-
-    private int getDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    private List<String> getDaysOfWeek() {
-        List<String> daysOfWeek = new ArrayList<>();
-        daysOfWeek.add("Sat");
-        daysOfWeek.add("Sun");
-        daysOfWeek.add("Mon");
-        daysOfWeek.add("Tue");
-        daysOfWeek.add("Wed");
-        daysOfWeek.add("Thu");
-        daysOfWeek.add("Fri");
-        daysOfWeek.add("Sat");
-        return daysOfWeek;
-    }
-
-    private int getEmotionIndex(String sentiment) {
-        // Map sentiments to emotion indices
-        // Customize this based on your specific sentiments
-        switch (sentiment.toLowerCase()) {
-            case "anger":
-                return 1;
-            case "fear":
-                return 2;
-            case "joy":
-                return 3;
-            case "love":
-                return 4;
-            case "sadness":
-                return 5;
-            case "surprise":
-                return 6;
-            default:
-                return 0;
-        }
     }
 
     @Override
@@ -264,14 +313,6 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
             finish();        }
         if (itemId == R.id.qibla){
             Intent intent = new Intent(getApplicationContext(), Qibla.class);
-            startActivity(intent);
-            finish();        }
-        if (itemId == R.id.sawm){
-            Intent intent = new Intent(getApplicationContext(), Sawm.class);
-            startActivity(intent);
-            finish();        }
-        if (itemId == R.id.settings){
-            Intent intent = new Intent(getApplicationContext(), AppSettings.class);
             startActivity(intent);
             finish();        }
         else if (itemId == R.id.profile) {

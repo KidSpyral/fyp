@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,6 +39,23 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
     private SharedPreferences sharedPreferences;
     String prayerKey;
     boolean[] isPrayerDone;
+    private static final String lastResetKey = "last_reset_date";
+
+
+    private static final String PREF_NAME = "ChecklistPrefs";
+    private static final String LAST_RESET_TIME = "lastResetTime";
+
+    public static void setLastResetTime(Context context, long timeInMillis) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
+        editor.putLong(LAST_RESET_TIME, timeInMillis);
+        editor.apply();
+    }
+
+    public static long getLastResetTime(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getLong(LAST_RESET_TIME, 0); // Default value is 0
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +64,40 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this); // Initialize SharedPreferences object
 
+        // Initialize prayerKey with an appropriate value (e.g., user's ID)
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser().getUid();
+        prayerKey = User;
+
+        // Update the last reset date to today
+        Calendar today = Calendar.getInstance();
+        long todayInMillis = today.getTimeInMillis();
+        sharedPreferences.edit().putLong(lastResetKey, todayInMillis).apply();
+
+        // Retrieve last reset date from SharedPreferences
+        long lastResetDateInMillis = sharedPreferences.getLong(lastResetKey, 0);
+        Calendar lastResetDate = Calendar.getInstance();
+        lastResetDate.setTimeInMillis(lastResetDateInMillis);
+
+        // Check if the last reset date is not today
+//        if (today.get(Calendar.DAY_OF_YEAR) != lastResetDate.get(Calendar.DAY_OF_YEAR)) {
+//            // Reset the prayer status
+//            resetPrayerStatus();
+//
+//            // Update the last reset date to today
+//            sharedPreferences.edit().putLong(lastResetKey, todayInMillis).apply();
+//        }
+        long lastResetTime = getLastResetTime(this);
+        long currentTime = System.currentTimeMillis();
+        long timeDifference = currentTime - lastResetTime;
+
+        if (timeDifference >= 24 * 60 * 60 * 1000) { // 24 hours in milliseconds
+            setLastResetTime(this, currentTime);
+            for(int index =0;index<5;index++){
+                sharedPreferences.edit().putBoolean(getPrayerKey(index), false).apply();
+            }
+
+        }
 
         fajrtracker = findViewById(R.id.fajrtracker);
         dhuhrtracker = findViewById(R.id.dhuhrtracker);
@@ -65,10 +115,8 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
         // Initialize prayer status array
         isPrayerDone = new boolean[]{fajrStatus, dhuhrStatus, asrStatus, maghribStatus, ishaStatus};
 
-
         // Set initial drawable based on prayer status
         updateDrawables();
-
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,75 +130,56 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = findViewById(R.id.navigation_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Set click listeners for prayer trackers
         fajrtracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the flag
-                isPrayerDone[0] = !isPrayerDone[0];
-
-                // Save the prayer status to SharedPreferences
-                sharedPreferences.edit().putBoolean("fajr_" + prayerKey, isPrayerDone[0]).apply();
-
-                // Update the drawable
-                updateDrawable(fajrtracker, isPrayerDone[0]);
+                togglePrayerStatus(0);
             }
         });
 
         dhuhrtracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the flag
-                isPrayerDone[0] = !isPrayerDone[0];
-
-                // Save the prayer status to SharedPreferences
-                sharedPreferences.edit().putBoolean("dhuhr_" + prayerKey, isPrayerDone[0]).apply();
-
-                // Update the drawable
-                updateDrawable(dhuhrtracker, isPrayerDone[0]);
+                togglePrayerStatus(1);
             }
         });
 
         asrtracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the flag
-                isPrayerDone[0] = !isPrayerDone[0];
-
-                // Save the prayer status to SharedPreferences
-                sharedPreferences.edit().putBoolean("asr_" + prayerKey, isPrayerDone[0]).apply();
-
-                // Update the drawable
-                updateDrawable(asrtracker, isPrayerDone[0]);
+                togglePrayerStatus(2);
             }
         });
 
         maghribtracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the flag
-                isPrayerDone[0] = !isPrayerDone[0];
-
-                // Save the prayer status to SharedPreferences
-                sharedPreferences.edit().putBoolean("maghrib_" + prayerKey, isPrayerDone[0]).apply();
-
-                // Update the drawable
-                updateDrawable(maghribtracker, isPrayerDone[0]);
+                togglePrayerStatus(3);
             }
         });
 
         ishatracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Toggle the flag
-                isPrayerDone[0] = !isPrayerDone[0];
-
-                // Save the prayer status to SharedPreferences
-                sharedPreferences.edit().putBoolean("isha_" + prayerKey, isPrayerDone[0]).apply();
-
-                // Update the drawable
-                updateDrawable(ishatracker, isPrayerDone[0]);
+                togglePrayerStatus(4);
             }
         });
+    }
+
+    // Method to reset the prayer status
+    private void resetPrayerStatus() {
+        // Reset the prayer status for all prayers
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("fajr_" + prayerKey, false);
+        editor.putBoolean("dhuhr_" + prayerKey, false);
+        editor.putBoolean("asr_" + prayerKey, false);
+        editor.putBoolean("maghrib_" + prayerKey, false);
+        editor.putBoolean("isha_" + prayerKey, false);
+        editor.apply();
+
+        // Update the drawables
+        updateDrawables();
     }
 
     // Update drawables for all prayer trackers
@@ -171,19 +200,39 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    private void setPrayerDone(boolean done) {
-        if (done) {
-            fajrtracker.setBackground(ContextCompat.getDrawable(this, R.drawable.text_bg_selector));
-            dhuhrtracker.setBackground(ContextCompat.getDrawable(this, R.drawable.text_bg_selector));
-            asrtracker.setBackground(ContextCompat.getDrawable(this, R.drawable.text_bg_selector));
-            maghribtracker.setBackground(ContextCompat.getDrawable(this, R.drawable.text_bg_selector));
-            ishatracker.setBackground(ContextCompat.getDrawable(this, R.drawable.text_bg_selector));
-        } else {
-            fajrtracker.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            dhuhrtracker.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            asrtracker.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            maghribtracker.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            ishatracker.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+    // Toggle the status of a specific prayer
+    private void togglePrayerStatus(int index) {
+        // Toggle the flag
+        isPrayerDone[index] = !isPrayerDone[index];
+
+        // Save the prayer status to SharedPreferences
+        sharedPreferences.edit().putBoolean(getPrayerKey(index), isPrayerDone[index]).apply();
+
+        // Update the drawable
+        updateDrawable(getPrayerTextView(index), isPrayerDone[index]);
+    }
+
+    // Get the SharedPreferences key for a specific prayer
+    private String getPrayerKey(int index) {
+        String[] prayerKeys = {"fajr", "dhuhr", "asr", "maghrib", "isha"};
+        return prayerKeys[index] + "_" + prayerKey;
+    }
+
+    // Get the TextView for a specific prayer
+    private TextView getPrayerTextView(int index) {
+        switch (index) {
+            case 0:
+                return fajrtracker;
+            case 1:
+                return dhuhrtracker;
+            case 2:
+                return asrtracker;
+            case 3:
+                return maghribtracker;
+            case 4:
+                return ishatracker;
+            default:
+                return null;
         }
     }
 

@@ -24,43 +24,56 @@
 
 
         <TextView
-            android:id="@+id/prayerText"
+            android:id="@+id/MoodStatistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="56dp"
-            android:text="Prayers"
-            android:textColor="@android:color/black"
+            android:text="Mood Statistics"
+            android:textColor="@color/accent_color"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Spinner
+            android:id="@+id/dataList"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="68dp"
+            android:layout_marginEnd="16dp"
+            android:iconifiedByDefault="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/MoodStatistics"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck"
+            android:entries="@array/time_options"/>
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/MoodChartData"
-            android:layout_width="378dp"
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
+            android:layout_width="365dp"
             android:layout_height="300dp"
             android:layout_marginTop="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prayerText" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/MoodStatistics" />
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ContentRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_below="@id/prayerText"
+            android:layout_below="@id/MoodStatistics"
             android:layout_marginTop="4dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/MoodChartData" />
+            app:layout_constraintTop_toBottomOf="@+id/pieChart" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

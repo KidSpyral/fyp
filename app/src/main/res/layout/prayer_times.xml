@@ -76,8 +76,8 @@
                     android:layout_width="284dp"
                     android:layout_height="55dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/pixel_frame_border"
-                    android:backgroundTint="@color/accent_color"
+                    android:background="@drawable/custom_edittext"
+
                     android:orientation="horizontal">
 
                     <TextView
@@ -131,9 +131,9 @@
                 android:layout_height="61dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/pixel_frame_border"
+                android:background="@drawable/custom_edittext"
                 android:orientation="vertical"
-                android:backgroundTint="@color/accent_color"
+
                 android:padding="15dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp">
@@ -155,10 +155,10 @@
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/pixel_frame_border"
+                android:background="@drawable/custom_edittext"
                 android:orientation="vertical"
                 android:padding="20dp"
-                android:backgroundTint="@color/accent_color"
+
                 android:paddingStart="20dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="20dp"
@@ -200,8 +200,8 @@
                 android:layout_height="145dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/pixel_frame_border"
-                android:backgroundTint="@color/accent_color"
+                android:background="@drawable/custom_edittext"
+
                 android:orientation="vertical"
                 android:padding="15dp"
                 android:paddingStart="20dp"
@@ -257,8 +257,8 @@
                 android:layout_width="284dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
-                android:background="@drawable/pixel_frame_border"
-                android:backgroundTint="@color/accent_color"
+                android:background="@drawable/custom_edittext"
+
                 android:orientation="horizontal">
 
                 <TextView

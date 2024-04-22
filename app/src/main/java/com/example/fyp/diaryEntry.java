@@ -1,5 +1,6 @@
 package com.example.fyp;
 
+
 public class diaryEntry extends diaryEntryId
 {
     private String description;

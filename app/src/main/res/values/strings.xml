@@ -50,4 +50,12 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_sawm">sawm</string>
 
+    <string-array name="time_options">
+        <item>All</item>
+        <item>Last 7 days</item>
+        <item>Last 30 days</item>
+        <item>Last 90 days</item>
+
+    </string-array>
+
 </resources>

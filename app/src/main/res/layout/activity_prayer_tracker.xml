@@ -31,6 +31,8 @@
             android:text="Prayer Tracker"
             android:textAlignment="center"
             android:textSize="32sp"
+            android:textColor="@color/accent_color"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -40,8 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:background="@drawable/pixel_frame_border"
-            android:backgroundTint="@color/accent_color"
+            android:background="@drawable/custom_edittext"
+
             android:orientation="vertical"
             android:padding="20dp"
             android:paddingStart="20dp"

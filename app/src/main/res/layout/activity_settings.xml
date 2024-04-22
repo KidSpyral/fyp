@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="198dp"
         android:layout_margin="20dp"
-        android:background="@drawable/pixel_frame_border"
+        android:background="@drawable/custom_edittext"
         android:orientation="vertical">
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_marginTop="10dp"
             android:hint="eg. Asia"
             android:textSize="12sp"
-            android:background="@drawable/pixel_frame_border"
+            android:background="@drawable/custom_edittext"
             android:drawableStart="@drawable/search_pixelated_icon"
             android:drawablePadding="10dp" />
 
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_margin="5dp"
-            android:background="@drawable/pixel_frame_border"
+            android:background="@drawable/custom_edittext"
             android:drawableEnd="@drawable/drop_down_pixelated"
             android:gravity="center_vertical"
             android:padding="5dp"

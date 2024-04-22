@@ -225,7 +225,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
         updateCurrentTime();
         updateDates();
         updatePrayerTimingsForToday(); // Add this line to load prayer timings
-        updateNextPrayerTime();
+
         handler.postDelayed(timeUpdateRunnable, 1000);
 
     }
@@ -726,7 +726,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
             calendar.setTime(nextPrayerTime);
             calendar.add(Calendar.MINUTE, 15); // Adding 15 minutes
             Date prayerEndTime = calendar.getTime();
-            nextPrayerEndTimeTextView.setText(formatter.format(prayerEndTime)); // Update end time
+
         }
     }
 
