@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -43,6 +43,7 @@ import com.batoulapps.adhan.PrayerTimes;
 import com.batoulapps.adhan.data.DateComponents;
 import com.example.fyp.Adapter.PrayerTimingsAdapter;
 import com.example.fyp.Model.PrayerTiming;
+import com.example.fyp.R;
 import com.example.fyp.Reciever.PrayerNotificationReceiver;
 import com.github.msarhan.ummalqura.calendar.UmmalquraCalendar;
 import com.google.android.material.navigation.NavigationView;
@@ -60,7 +61,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class prayer_times extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Prayer_Times extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -851,7 +852,7 @@ public class prayer_times extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();        }
         else if (itemId == R.id.settingsicon) {
-            Intent intent = new Intent(prayer_times.this, TimeZoneSettings.class);
+            Intent intent = new Intent(Prayer_Times.this, TimeZoneSettings.class);
             startActivity(intent);       }
         else if (itemId == R.id.logout) {
             FirebaseAuth.getInstance().signOut();

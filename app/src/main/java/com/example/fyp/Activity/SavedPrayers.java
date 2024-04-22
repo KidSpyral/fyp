@@ -1,7 +1,4 @@
-package com.example.fyp;
-
-import static androidx.core.content.ContentProviderCompat.requireContext;
-import static java.security.AccessController.getContext;
+package com.example.fyp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,9 +20,12 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.fyp.Adapter.PrayerAdapter;
+import com.example.fyp.Model.Prayer;
+import com.example.fyp.Model.diaryEntry;
+import com.example.fyp.R;
 import com.example.fyp.common.AppUtils;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -37,7 +37,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.example.fyp.diaryEntry;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
     FirebaseAuth mAuth;
     String User;
     DatabaseReference referenceProfile;
-    private PrayerAdapter PrayerAdapter;
+    private com.example.fyp.Adapter.PrayerAdapter PrayerAdapter;
     private List<Prayer> PrayerList;
 
     private RecyclerView recyclerView2;

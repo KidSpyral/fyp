@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import android.content.Context;
 import android.hardware.Sensor;

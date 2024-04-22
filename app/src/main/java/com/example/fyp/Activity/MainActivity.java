@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +18,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyp.Adapter.DiaryEntryAdapter;
+import com.example.fyp.Adapter.PrayerAdapter;
+import com.example.fyp.Model.Prayer;
+import com.example.fyp.Model.diaryEntry;
+import com.example.fyp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FloatingActionButton prayers;
     FloatingActionButton prayer_times;
     private RecyclerView recyclerView, recyclerView2;
-    private DiaryEntryAdapter DiaryEntryAdapter;
+    private com.example.fyp.Adapter.DiaryEntryAdapter DiaryEntryAdapter;
     private List<diaryEntry> diaryEntriesList;
-    private PrayerAdapter PrayerAdapter;
+    private com.example.fyp.Adapter.PrayerAdapter PrayerAdapter;
     private List<Prayer> PrayerList;
 
     @Override
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         prayer_times.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), prayer_times.class);
+                Intent intent = new Intent(getApplicationContext(), Prayer_Times.class);
                 startActivity(intent);
                 finish();
 

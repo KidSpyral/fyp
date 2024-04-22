@@ -1,7 +1,7 @@
-package com.example.fyp;
+package com.example.fyp.Model;
 
 
-public class diaryEntry extends diaryEntryId
+public class diaryEntry extends com.example.fyp.Model.diaryEntryId
 {
     private String description;
     private String title;

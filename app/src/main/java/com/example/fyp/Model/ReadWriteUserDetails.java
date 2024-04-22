@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Model;
 
 public class ReadWriteUserDetails {
     public String email;

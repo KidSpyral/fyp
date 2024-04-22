@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Model;
 
 import android.graphics.Bitmap;
 

@@ -1,10 +1,9 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -13,13 +12,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.fyp.Activity.AppSettings;
+import com.example.fyp.Activity.Login;
+import com.example.fyp.Activity.MainActivity;
+import com.example.fyp.Activity.Prayer_Times;
+import com.example.fyp.Activity.Profile;
+import com.example.fyp.Activity.Qibla;
+import com.example.fyp.Activity.Sawm;
+import com.example.fyp.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -250,7 +256,7 @@ public class PrayerTracker extends AppCompatActivity implements NavigationView.O
 
         int itemId = item.getItemId();
         if (itemId == R.id.backButton){
-            Intent intent = new Intent(getApplicationContext(), prayer_times.class);
+            Intent intent = new Intent(getApplicationContext(), Prayer_Times.class);
             startActivity(intent);
             finish();        }
         else if (itemId == R.id.logout) {

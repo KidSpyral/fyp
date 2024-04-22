@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -42,6 +42,7 @@ import com.batoulapps.adhan.PrayerTimes;
 import com.batoulapps.adhan.data.DateComponents;
 import com.example.fyp.Adapter.PrayerTimingsAdapter;
 import com.example.fyp.Model.PrayerTiming;
+import com.example.fyp.R;
 import com.example.fyp.Reciever.PrayerNotificationReceiver;
 import com.github.msarhan.ummalqura.calendar.UmmalquraCalendar;
 import com.google.android.material.navigation.NavigationView;
@@ -50,7 +51,6 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;

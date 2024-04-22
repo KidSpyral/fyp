@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Reciever;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

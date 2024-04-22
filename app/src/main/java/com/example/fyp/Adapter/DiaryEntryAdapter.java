@@ -1,4 +1,4 @@
-package com.example.fyp;
+package com.example.fyp.Adapter;
 
 import android.content.Context;
 import android.os.Handler;
@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fyp.Activity.MainActivity;
+import com.example.fyp.Model.diaryEntry;
+import com.example.fyp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
