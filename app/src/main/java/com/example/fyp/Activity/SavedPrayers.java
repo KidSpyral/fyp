@@ -25,10 +25,17 @@ import com.example.fyp.Model.Prayer;
 import com.example.fyp.Model.diaryEntry;
 import com.example.fyp.R;
 import com.example.fyp.common.AppUtils;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,6 +66,7 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
     private Spinner spinner;
     List<diaryEntry> diaryEntries;
     List<diaryEntry> diarySortedEntries;
+    private LineChart lineChart;
 
 
     private void reDrawPieChart(String dataType){
@@ -113,6 +121,10 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_prayers);
 
+        lineChart = findViewById(R.id.line1);
+
+
+
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser().getUid();
 
@@ -156,6 +168,57 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
         PrayerAdapter = new PrayerAdapter(PrayerList, this);
         recyclerView2.setAdapter(PrayerAdapter);
         fetchPrayers();
+        lineChartgo();
+    }
+
+    private void lineChartgo() {
+
+        // Configure line chart
+        lineChart.getDescription().setEnabled(false);
+        lineChart.setDrawGridBackground(false);
+        lineChart.setPinchZoom(true);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[] {"anger", "fear", "joy", "love", "sadness", "surprise"}));
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setAxisMinimum(0f); // start at zero
+        leftAxis.setDrawGridLines(true);
+
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        // Call method to update line chart with emotion data for last 7 days
+        updateLineChart();
+    }
+
+    // Add this method to calculate emotion frequencies and update the line chart
+    private void updateLineChart() {
+        // Assuming diaryEntries contains all diary entries
+        List<diaryEntry> last7DaysEntries = new ArrayList<>();
+        Date currentDate = AppUtils.getCurrentDate();
+
+        for (diaryEntry entry : diaryEntries) {
+            if (AppUtils.isDifference90Days(currentDate, AppUtils.parseFetchedDate(entry.getEntryDate()))) {
+                last7DaysEntries.add(entry);
+            }
+        }
+
+        HashMap<String, Integer> emotionFrequencies = calculateEmotionFrequencies(last7DaysEntries);
+
+        // Prepare data for line chart
+        List<Entry> entries = new ArrayList<>();
+        int index = 0;
+        for (Map.Entry<String, Integer> entry : emotionFrequencies.entrySet()) {
+            entries.add(new Entry(index++, entry.getValue()));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Emotion Frequency");
+        LineData lineData = new LineData(dataSet);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
     }
 
     private void retrieveDiaryEntries() {
@@ -183,7 +246,7 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void calculateEmotionFrequencies(List<diaryEntry> diaryEntries) {
+    private HashMap<String, Integer> calculateEmotionFrequencies(List<diaryEntry> diaryEntries) {
         // Define list of emotions
         String[] emotions = {"anger", "fear", "joy", "love", "sadness", "surprise"};
 
@@ -203,6 +266,8 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
 
         // Generate pie chart with emotion frequencies
         generatePieChart(emotionFrequencies);
+
+        return emotionFrequencies;
     }
 
     private void generatePieChart(HashMap<String, Integer> emotionFrequencies) {
@@ -314,6 +379,14 @@ public class SavedPrayers extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(getApplicationContext(), Qibla.class);
             startActivity(intent);
             finish();        }
+        if (itemId == R.id.sawm){
+            Intent intent = new Intent(getApplicationContext(), Sawm.class);
+            startActivity(intent);
+            finish();        }
+        if (itemId == R.id.settings){
+            Intent intent = new Intent(getApplicationContext(), AppSettings.class);
+            intent.putExtra("openedFromDrawer", true); // Pass the flag indicating it was opened from the drawer
+            startActivity(intent);  }
         else if (itemId == R.id.profile) {
             Intent intent = new Intent(getApplicationContext(), Profile.class);
             startActivity(intent);

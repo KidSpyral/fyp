@@ -852,7 +852,7 @@ public class Prayer_Times extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();        }
         else if (itemId == R.id.settingsicon) {
-            Intent intent = new Intent(Prayer_Times.this, TimeZoneSettings.class);
+            Intent intent = new Intent(Prayer_Times.this, AppSettings.class);
             startActivity(intent);       }
         else if (itemId == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
@@ -878,8 +878,8 @@ public class Prayer_Times extends AppCompatActivity implements NavigationView.On
             finish();        }
         if (itemId == R.id.settings){
             Intent intent = new Intent(getApplicationContext(), AppSettings.class);
-            startActivity(intent);
-            finish();        }
+            intent.putExtra("openedFromDrawer", true); // Pass the flag indicating it was opened from the drawer
+            startActivity(intent);  }
         else if (itemId == R.id.profile) {
             Intent intent = new Intent(getApplicationContext(), Profile.class);
             startActivity(intent);

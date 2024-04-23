@@ -317,8 +317,8 @@ public class Qibla extends AppCompatActivity implements NavigationView.OnNavigat
             finish();        }
         if (itemId == R.id.settings){
             Intent intent = new Intent(getApplicationContext(), AppSettings.class);
-            startActivity(intent);
-            finish();        }
+            intent.putExtra("openedFromDrawer", true); // Pass the flag indicating it was opened from the drawer
+            startActivity(intent);  }
         else if (itemId == R.id.profile) {
             Intent intent = new Intent(getApplicationContext(), Profile.class);
             startActivity(intent);
