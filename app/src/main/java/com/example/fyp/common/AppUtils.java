@@ -6,6 +6,9 @@ import android.net.NetworkInfo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -13,6 +16,39 @@ public class AppUtils {
 
 
 
+    public static long convertDateToTimestamp(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date date = dateFormat.parse(dateString);
+            return date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1; // Return -1 if parsing fails
+        }
+    }
+    public static String[] getPreviousSevenDates(Date currentDate) {
+        String[] previousSevenDates = new String[7];
+
+
+        // Create a Calendar instance
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+
+        // Format for date string
+        SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+
+        // Iterate and get previous seven dates
+        for (int i = 0; i < 7; i++) {
+            // Add one day to the current date
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            // Get the date as string
+
+            previousSevenDates[i] = sdf.format(calendar.getTime());
+        }
+
+
+        return previousSevenDates;
+    }
     public static Date getCurrentDate(){
         Date currentDate = new Date();
 
