@@ -42,9 +42,6 @@
             android:name=".Activity.Qibla"
             android:exported="false" />
         <activity
-            android:name=".Activity.AppSettings"
-            android:exported="false" />
-        <activity
             android:name=".Activity.Prayer_Times"
             android:exported="false" />
         <activity

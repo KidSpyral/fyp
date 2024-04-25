@@ -13,11 +13,12 @@ public class diaryEntry extends com.example.fyp.Model.diaryEntryId
         this.timestamp = System.currentTimeMillis();
 
     }
-    public diaryEntry(String description, String title, String sentiment, String entryDate) {
+    public diaryEntry(String description, String title, String sentiment, String entryDate,long timestamp) {
         this.description = description;
         this.title = title;
         this.sentiment = sentiment;
         this.entryDate = entryDate;
+        this.timestamp = timestamp;
     }
 
     public long getTimestamp() {

@@ -144,10 +144,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (Prayer != null) {
                         PrayerList.add(Prayer);
                         if (PrayerList.size() > 0) {
-                            // Get the most recent entry (assuming PrayerList is sorted by date or has some timestamp)
+                            // most recent entry (assuming PrayerList is sorted by date or has some timestamp)
                             Prayer mostRecentPrayer = PrayerList.get(PrayerList.size() - 1);
 
-                            // Create a new list with only the most recent entry
+                            // new list with only the most recent entry
                             List<Prayer> mostRecentList = new ArrayList<>();
                             mostRecentList.add(mostRecentPrayer);
 

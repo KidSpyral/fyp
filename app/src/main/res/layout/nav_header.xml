@@ -7,4 +7,12 @@
     android:gravity="top"
     android:padding="16dp"
     android:background="@color/white"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <ImageView
+    android:layout_width="200dp"
+    android:layout_height="150dp"
+    android:layout_gravity="center"
+    android:src="@drawable/ic_launcher_adaptive_fore"/>
+
+    </LinearLayout>

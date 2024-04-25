@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CA3"
+rootProject.name = "Alafia"
 include(":app")

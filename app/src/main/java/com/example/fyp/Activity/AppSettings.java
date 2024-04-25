@@ -57,7 +57,7 @@ public class AppSettings extends AppCompatActivity {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
-        // Set an initial text for the selected_time_zone_txt TextView based on the saved timezone
+        // initial text for the selected_time_zone_txt TextView based on the saved timezone
         String savedTimeZone = sharedPreferences.getString("SelectedTimeZone", "");
         if (!savedTimeZone.isEmpty()) {
             selected_time_zone_txt.setText(savedTimeZone);
@@ -65,7 +65,7 @@ public class AppSettings extends AppCompatActivity {
             selected_time_zone_txt.setText("none");
         }
 
-        // Add an OnClickListener to the selected_time_zone_txt TextView
+        // OnClickListener to the selected_time_zone_txt TextView
         selected_time_zone_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +74,7 @@ public class AppSettings extends AppCompatActivity {
             }
         });
 
-        // Add an OnClickListener to the selected_time_zone_txt TextView
+        // OnClickListener to the selected_time_zone_txt TextView
         searchbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,29 +84,29 @@ public class AppSettings extends AppCompatActivity {
         });
 
 
-        // Extract and set the list of time zones defined in coordinates.xml
+        // list of time zones defined in coordinates.xml
         List<String> definedTimeZones = extractDefinedTimeZones();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, definedTimeZones);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Set the adapter for the Spinner
+        //adapter for the Spinner
         timeZoneSpinner.setAdapter(adapter);
 
-        // Check saved time zone preference and set the default if it's empty
+        // saved time zone preference and default if it's empty
         if (!savedTimeZone.isEmpty()) {
             int savedTimeZoneIndex = adapter.getPosition(savedTimeZone);
             if (savedTimeZoneIndex >= 0) {
                 timeZoneSpinner.setSelection(savedTimeZoneIndex);
             } else {
-                // Handle the case where the saved timezone is not in the definedTimeZones list.
-                // You may choose to set a default selection or handle it differently.
+                //  case where the saved timezone is not in the definedTimeZones list.
+                //  choose to set a default selection or handle it differently.
             }
         } else {
             // Default to the first time zone if the preference is empty
             timeZoneSpinner.setSelection(0);
         }
 
-        // Add a TextWatcher to the searchbox EditText
+        // TextWatcher to the searchbox EditText
         searchbox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

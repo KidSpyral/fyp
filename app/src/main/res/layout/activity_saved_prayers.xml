@@ -56,7 +56,7 @@
             android:id="@+id/pieChart"
             android:layout_width="365dp"
             android:layout_height="250dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,11 +67,24 @@
             android:id="@+id/line1"
             android:layout_width="365dp"
             android:layout_height="200dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+
+        <TextView
+            android:id="@+id/SavedPrayers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:text="Recommended Prayers"
+            android:textColor="@color/accent_color"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line1" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -79,12 +92,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_below="@id/MoodStatistics"
-            android:layout_marginTop="4dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line1" />
+            app:layout_constraintTop_toBottomOf="@+id/SavedPrayers" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

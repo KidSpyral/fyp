@@ -88,7 +88,7 @@
                 android:layout_marginEnd="16dp"
                 android:onClick="LogInn"
                 android:text="LOG IN"
-                app:iconTint="#000000"
+                android:backgroundTint="#CD0404"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"

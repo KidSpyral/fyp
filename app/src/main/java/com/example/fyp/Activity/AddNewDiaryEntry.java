@@ -58,14 +58,16 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
     private String prayer;
     private String ttl;
     private String entrydate;
-    public static AddNewDiaryEntry newInstance(){
+    private OnDiaryEntrySavedListener savedListener;
+
+    public static AddNewDiaryEntry newInstance() {
         return new AddNewDiaryEntry();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.new_task , container , false);
+        return inflater.inflate(R.layout.new_task, container, false);
 
 
     }
@@ -109,7 +111,6 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
         });
 
 
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +135,7 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
         });
 
     }
+
     private void predictSentiment(String sentence) {
         client1.predictMoodSentiment(sentence, new Callback<SentimentResponse>() {
             @Override
@@ -143,19 +145,20 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
                     String sentiment = sentimentResponse.getSentiment();
                     float confidence = sentimentResponse.getConfidence();
 
-                    // Now that sentiment is available, save the diary entry
+                    // diary entry save
                     saveDiaryEntry(sentiment);
 
                 } else {
-                    // Handle error
-                    // Optionally, show a message or log the error
+
                 }
             }
 
             @Override
             public void onFailure(Call<SentimentResponse> call, Throwable t) {
                 // Handle failure
-                // Optionally, show a message or log the failure
+                // for message or failure log
+
+
             }
         });
 
@@ -167,18 +170,18 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
                     String prayer = sentimentResponse.getSentiment();
                     float confidence = sentimentResponse.getConfidence();
 
-                    // Now that sentiment is available, save the diary entry
+                    // diary entry save
                     savePrayer(prayer);
                 } else {
                     // Handle error
-                    // Optionally, show a message or log the error
+                    // for message or failure log
                 }
             }
 
             @Override
             public void onFailure(Call<SentimentResponse> call, Throwable t) {
                 // Handle failure
-                // Optionally, show a message or log the failure
+                // for message or failure log
             }
         });
 
@@ -190,9 +193,9 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
 
         if (currentUser != null) {
             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Diary Entries").child(currentUser.getUid());
-            String diaryEntryId = referenceProfile.push().getKey(); // Generate a unique key for the task
+            String diaryEntryId = referenceProfile.push().getKey(); // unique key for the task
 
-            diaryEntry newdiaryEntry = new diaryEntry(desc, ttl, sentiment, entrydate);
+            diaryEntry newdiaryEntry = new diaryEntry(desc, ttl, sentiment, entrydate, System.currentTimeMillis());
             newdiaryEntry.setDiaryEntryId(diaryEntryId);
 
             referenceProfile.child(diaryEntryId).setValue(newdiaryEntry)
@@ -225,7 +228,7 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
 
         if (currentUser != null) {
             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Prayers").child(currentUser.getUid());
-            String PrayerId = referenceProfile.push().getKey(); // Generate a unique key for the task
+            String PrayerId = referenceProfile.push().getKey(); // unique key for the task
 
             Prayer newPrayer = new Prayer(prayer);
             newPrayer.setPrayerId(PrayerId);
@@ -236,7 +239,7 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(context, "Prayer Saved", Toast.LENGTH_SHORT).show();
-                                // Call the listener when the entry is saved
+                                // listener when the entry is saved
                                 if (savedListener != null) {
                                     savedListener.onDiaryEntrySaved(prayer);
                                 }
@@ -255,9 +258,6 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
         dismiss();
     }
 
-
-
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -268,19 +268,16 @@ public class AddNewDiaryEntry extends BottomSheetDialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         Activity activity = getActivity();
-        if (activity instanceof  OnDialogCloseListener){
-            ((OnDialogCloseListener)activity).onDialogClose(dialog);
+        if (activity instanceof OnDialogCloseListener) {
+            ((OnDialogCloseListener) activity).onDialogClose(dialog);
         }
+    }
+
+    public void setOnDiaryEntrySavedListener(OnDiaryEntrySavedListener listener) {
+        this.savedListener = listener;
     }
 
     public interface OnDiaryEntrySavedListener {
         void onDiaryEntrySaved(String description);
-    }
-    private OnDiaryEntrySavedListener savedListener;
-
-    // Other existing code
-
-    public void setOnDiaryEntrySavedListener(OnDiaryEntrySavedListener listener) {
-        this.savedListener = listener;
     }
 }

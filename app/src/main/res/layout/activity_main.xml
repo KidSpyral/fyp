@@ -103,7 +103,7 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="@android:color/darker_gray"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/man_making_dua_sara"
+        android:src="@drawable/icon_chart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.666"
